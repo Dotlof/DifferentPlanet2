@@ -8,6 +8,9 @@ public class scr_PlayerMovement : MonoBehaviour
     public float moveSpeed = 0.001f;
     public GameObject mainCamera;
 
+    public scr_WeaponSystem[] WeaponSystems;
+    private int currentWeaponSystemIndex = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -17,6 +20,9 @@ public class scr_PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Fire
+        if (Input.GetAxisRaw("Fire1") != 0) WeaponSystems[currentWeaponSystemIndex].Fire();
+
         mainCamera.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
 
         //MoveTowardsCursor
