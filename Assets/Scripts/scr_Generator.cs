@@ -6,10 +6,11 @@ public class scr_Generator : MonoBehaviour
 {
     public GameObject starship;
     public GameObject chunk;
+    public int range;
     GameObject[] chunks;
 
     Vector3 starshipPos;
-    Vector3 chunkPos;
+    Vector2[] chunkPos;
     float spawnMultiplierX;
     float spawnMultiplierY;
 
@@ -26,22 +27,26 @@ public class scr_Generator : MonoBehaviour
         spawnMultiplierX = Mathf.Round(starshipPos.x / 8192);
         spawnMultiplierY = Mathf.Round(starshipPos.y / 8192);
 
-        chunkPos = new Vector2(spawnMultiplierX * 8192, spawnMultiplierY * 8192);
-        chunks = GameObject.FindGameObjectsWithTag("Chunk");
+        chunkPos = new Vector2[] {new Vector2(spawnMultiplierX * 8192, spawnMultiplierY * 8192), new Vector2((spawnMultiplierX + range) * 8192, spawnMultiplierY * 8192), new Vector2((spawnMultiplierX - range) * 8192, spawnMultiplierY * 8192), new Vector2(spawnMultiplierX * 8192, (spawnMultiplierY + range) * 8192), new Vector2(spawnMultiplierX * 8192, (spawnMultiplierY - range) * 8192), new Vector2((spawnMultiplierX + range) * 8192, (spawnMultiplierY + range) * 8192), new Vector2((spawnMultiplierX - range) * 8192, (spawnMultiplierY + range) * 8192), new Vector2((spawnMultiplierX + range) * 8192, (spawnMultiplierY - range) * 8192), new Vector2((spawnMultiplierX - range) * 8192, (spawnMultiplierY - range) * 8192), };
 
-        bool activeChunk = false;
-
-        foreach (GameObject chonk in chunks)
+        foreach (Vector2 chunkPlace in chunkPos)
         {
-            if (Vector2.Distance(chonk.transform.position, chunkPos) < 1)
+            chunks = GameObject.FindGameObjectsWithTag("Chunk");
+
+            bool activeChunk = false;
+
+            foreach (GameObject chonk in chunks)
             {
-                activeChunk = true;
+                if (Vector2.Distance(chonk.transform.position, chunkPlace) < 1)
+                {
+                    activeChunk = true;
+                }
             }
-        }
 
-        if (!activeChunk)
-        {
-            Instantiate(chunk, new Vector3(spawnMultiplierX * 8192, spawnMultiplierY * 8192, 0), Quaternion.identity);
+            if (!activeChunk)
+            {
+                Instantiate(chunk, new Vector3(chunkPlace.x,chunkPlace.y, 0), Quaternion.identity);
+            }
         }
 
         Debug.Log("X: " + spawnMultiplierX + "  Y: " + spawnMultiplierY);
