@@ -5,7 +5,9 @@ using UnityEngine;
 public class scr_PlayerMovement : MonoBehaviour
 {
     private Vector3 mousePosition;
-    public float moveSpeed = 0.001f;
+    private Vector3 direction;
+    private Rigidbody2D rb;
+    public float moveSpeed = 10f;
     public GameObject mainCamera;
 
     public scr_WeaponSystem[] WeaponSystems;
@@ -14,7 +16,9 @@ public class scr_PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        rb = this.GetComponent<Rigidbody2D>();
+        //rb.AddRelativeForce(new Vector2(-moveSpeed, 0), ForceMode2D.Impulse);
+        //Dummheit lol
     }
 
     // Update is called once per frame
@@ -26,9 +30,14 @@ public class scr_PlayerMovement : MonoBehaviour
         mainCamera.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
 
         //MoveTowardsCursor
+        
         mousePosition = Input.mousePosition;
         mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
-        transform.position = Vector2.Lerp(transform.position, mousePosition, moveSpeed);
+        direction = mousePosition - transform.position;
+        direction.Normalize();
+
+        //transform.position = Vector2.LerpUnclamped(transform.position, mousePosition, moveSpeed);
+        //Dummheit lol
 
         //Rotate to Cursor
         Vector2 positionOnScreen = Camera.main.WorldToViewportPoint(transform.position);
@@ -41,4 +50,19 @@ public class scr_PlayerMovement : MonoBehaviour
     {
         return Mathf.Atan2(a.y - b.y, a.x - b.x) * Mathf.Rad2Deg;
     }
+
+    private void FixedUpdate()
+    {
+        MovePlayer(direction);
+    }
+
+    void MovePlayer(Vector2 direction)
+    {
+        Debug.Log(direction.magnitude);
+        float x = direction.magnitude / 0.3f;
+        //0,2 = direction.magnitude /x
+        direction = direction / x;
+        rb.MovePosition((Vector2) transform.position + (direction * moveSpeed * Time.deltaTime));
+    }
+
 }
