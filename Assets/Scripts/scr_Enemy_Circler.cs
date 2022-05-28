@@ -6,6 +6,8 @@ public class scr_Enemy_Circler : MonoBehaviour
 {
     Vector3 direction;
 
+    public scr_WeaponSystem WeaponSystem;
+
     private bool arrived = false;
     public float AngularSpeed, RotationRadius;
     private float posX, posY, RotationAngle;
@@ -89,7 +91,7 @@ public class scr_Enemy_Circler : MonoBehaviour
             posY = player.position.y + Mathf.Cos(RotationAngle) * RotationRadius;
             transform.position = new Vector3(posX, posY, 0);
             RotationAngle = RotationAngle + Time.deltaTime * AngularSpeed;
-
+            WeaponSystem.Fire();
             if (RotationAngle >= 360) RotationAngle = 0;
 
         }

@@ -33,6 +33,16 @@ public class scr_Enemy_Follower : MonoBehaviour
         //movement = direction;
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log(collision);
+        if(collision.gameObject.tag == "Player")
+        {
+            collision.gameObject.GetComponent<scr_PlayerMovement>().hp--;
+            Destroy(gameObject);
+        }
+    }
+
     void FixedUpdate()
     {
         MoveEnemy(direction);

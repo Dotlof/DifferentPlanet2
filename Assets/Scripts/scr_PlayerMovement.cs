@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class scr_PlayerMovement : MonoBehaviour
 {
+
+    public int hp;
+
     private Vector3 mousePosition;
     private Vector3 direction;
     private Rigidbody2D rb;
-    public float moveSpeed = 10f;
+    public float moveSpeed = 30f;
     public GameObject mainCamera;
 
     public scr_WeaponSystem[] WeaponSystems;
@@ -44,6 +47,11 @@ public class scr_PlayerMovement : MonoBehaviour
         Vector2 mouseOnScreen = (Vector2)Camera.main.ScreenToViewportPoint(Input.mousePosition);
         float angle = AngleBetweenTwoPoints(positionOnScreen, mouseOnScreen);
         transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
+
+        if(hp <= 0)
+        {
+            StartCoroutine(GameOver());
+        }
     }
 
     float AngleBetweenTwoPoints(Vector3 a, Vector3 b)
@@ -63,6 +71,12 @@ public class scr_PlayerMovement : MonoBehaviour
         //0,2 = direction.magnitude /x
         direction = direction / x;
         rb.MovePosition((Vector2) transform.position + (direction * moveSpeed * Time.deltaTime));
+    }
+
+    IEnumerator GameOver()
+    {
+        Debug.Log("Dead");
+        yield return new WaitForSeconds(0.1f);
     }
 
 }
